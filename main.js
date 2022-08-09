@@ -1,4 +1,3 @@
-require('update-electron-app')()
 const {
   app,
   BrowserWindow,
@@ -6,11 +5,6 @@ const {
   autoUpdater,
   dialog,
 } = require("electron");
-
-const server = "https://your-deployment-url.com";
-const url = `${server}/update/${process.platform}/${app.getVersion()}`;
-
-autoUpdater.setFeedURL({ url });
 
 let mainWindow;
 
