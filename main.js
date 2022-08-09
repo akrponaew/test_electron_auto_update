@@ -1,21 +1,15 @@
-const {
-  app,
-  BrowserWindow,
-  ipcMain,
-  autoUpdater,
-  dialog,
-} = require("electron");
+const { app, BrowserWindow, ipcMain, dialog } = require("electron");
+const { autoUpdater } = require("electron-updater");
+const log = require("electron-log");
 
-const server = "https://test-electron-auto-update-akrponaew.vercel.app";
-const url = `${server}/update/${process.platform}/${app.getVersion()}`;
-
-autoUpdater.setFeedURL({ url });
-
-setInterval(() => {
-  autoUpdater.checkForUpdates();
-}, 5000);
+autoUpdater.logger = log;
+autoUpdater.logger.transports.file.level = "info";
 
 let mainWindow;
+
+setInterval(() => {
+  autoUpdater.checkForUpdatesAndNotify();
+}, 5000);
 
 function createWindow() {
   mainWindow = new BrowserWindow({
@@ -26,8 +20,8 @@ function createWindow() {
     },
   });
 
-  mainWindow.maximize();
   mainWindow.webContents.openDevTools();
+  mainWindow.maximize();
   mainWindow.loadFile("index.html");
   mainWindow.on("closed", function () {
     mainWindow = null;
@@ -37,17 +31,26 @@ function createWindow() {
 app.on("ready", () => {
   createWindow();
 
-  const dialogOpts = {
-    type: "info",
-    buttons: ["Restart", "Later"],
-    title: "Application Update",
-    message: app.getVersion(),
-    detail: "from ready",
-  };
+  // const dialogOpts = {
+  //   type: "info",
+  //   buttons: ["OK"],
+  //   title: "Application Info",
+  //   message: app.getVersion(),
+  // };
 
-  dialog.showMessageBox(dialogOpts).then((returnValue) => {});
+  // dialog.showMessageBox(dialogOpts).then((returnValue) => {
+  //   // if (returnValue.response === 0) autoUpdater.quitAndInstall();
+  //   // autoUpdater.quitAndInstall();
+  //   // setImmediate(() => {
+  //   //   app.removeAllListeners("window-all-closed");
+  //   //   if (mainWindow != null) {
+  //   //     mainWindow.close();
+  //   //   }
+  //   //   autoUpdater.quitAndInstall(false);
+  //   // });
+  // });
 
-  autoUpdater.checkForUpdates();
+  // autoUpdater.checkForUpdatesAndNotify();
 });
 
 app.on("window-all-closed", function () {
@@ -73,7 +76,21 @@ autoUpdater.on("update-downloaded", (event, releaseNotes, releaseName) => {
   };
 
   dialog.showMessageBox(dialogOpts).then((returnValue) => {
-    if (returnValue.response === 0) autoUpdater.quitAndInstall();
+    if (returnValue.response === 0) autoUpdater.autoInstallOnAppQuit();
+    // autoUpdater.autoInstallOnAppQuit = true;
+    // .quitAndInstall();
+
+    // autoUpdater.autoInstallOnAppQuit = true;
+    // app.quit();
+
+    // setImmediate(() => {
+    //   app.removeAllListeners("window-all-closed");
+    //   if (mainWindow != null) {
+    //     mainWindow.close();
+    //   }
+    //   autoUpdater.autoInstallOnAppQuit = true;
+    //   autoUpdater.quitAndInstall(false);
+    // });
   });
 });
 
@@ -81,30 +98,3 @@ autoUpdater.on("error", (message) => {
   console.error("There was a problem updating the application");
   console.error(message);
 });
-
-// ipcMain.on("app_version", (event) => {
-//   event.sender.send("app_version", { version: app.getVersion() });
-// });
-
-// autoUpdater.on("update-available", () => {
-//   const dialogOpts = {
-//     type: "info",
-//     buttons: ["Restart", "Later"],
-//     title: "Application Update",
-//     message: app.getVersion(),
-//     detail: "from update-available",
-//   };
-
-//   // win.once("ready-to-show", () => {
-//   dialog.showMessageBox(dialogOpts).then((returnValue) => {});
-//   // });
-
-//   mainWindow.webContents.send("update_available");
-// });
-// autoUpdater.on("update-downloaded", () => {
-//   mainWindow.webContents.send("update_downloaded");
-// });
-
-// ipcMain.on("restart_app", () => {
-//   autoUpdater.quitAndInstall();
-// });

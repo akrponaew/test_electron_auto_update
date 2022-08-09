@@ -1,6 +1,6 @@
 {
   "name": "my-electron-app",
-  "version": "1.0.10",
+  "version": "1.0.0",
   "main": "main.js",
   "license": "MIT",
   "repository": {
@@ -10,17 +10,37 @@
   "devDependencies": {
     "electron": "^20.0.1",
     "electron-builder": "^23.3.3",
-    "electron-updater": "^5.2.1",
     "http-server": "^14.1.1"
   },
   "scripts": {
     "start": "electron .",
-    "build": "electron-builder build --publish never",
-    "deploy": "electron-builder build --publish always"
+    "build": "electron-builder build --mac --win --publish never",
+    "deploy": "electron-builder build --mac --win --publish always",
+    "run-server": "http-server dist -p 8080"
   },
   "dependencies": {
+    "electron-log": "^4.4.8",
+    "electron-updater": "^5.2.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "update-electron-app": "^2.0.1"
+  },
+  "build": {
+    "publish": [
+      {
+        "provider": "generic",
+        "url": "http://127.0.0.1:8080/"
+      }
+    ],
+    "appId": "com.github.peelz.electron-auto-update",
+    "mac": {
+      "target": [
+        "zip",
+        "dmg"
+      ]
+    },
+    "nsis": {
+      "perMachine": true
+    }
   }
 }
