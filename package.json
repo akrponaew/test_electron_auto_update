@@ -1,6 +1,6 @@
 {
   "name": "my-electron-app",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "main": "main.js",
   "license": "MIT",
   "repository": {
@@ -21,6 +21,7 @@
   "dependencies": {
     "dmg-license": "^1.0.11",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "update-electron-app": "^2.0.1"
   }
 }
