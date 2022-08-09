@@ -1,6 +1,6 @@
 {
   "name": "my-electron-app",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "main": "main.js",
   "license": "MIT",
   "repository": {
@@ -15,8 +15,8 @@
   },
   "scripts": {
     "start": "electron .",
-    "build": "electron-builder build --mac --win --publish never",
-    "deploy": "electron-builder build --mac --win --publish always"
+    "build": "electron-builder build --publish never",
+    "deploy": "electron-builder build --publish always"
   },
   "dependencies": {
     "react": "^18.2.0",
